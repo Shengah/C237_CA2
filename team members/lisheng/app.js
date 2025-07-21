@@ -59,3 +59,12 @@ const checkAdmin = (req, res, next) => {
         res.redirect('/dashboard');
     }
 };
+
+app.get('/', (req, res) => {
+    res.render('index', { user: req.session.user, messages: req.flash('success')});
+});
+
+// Starting the server
+app.listen(3000, () => {
+    console.log('Server started on port 3000');
+});
