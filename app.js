@@ -32,7 +32,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     // Session expires after 1 week of inactivity
-    cookie: {maxAge: 1000 * 60 * 60 * 24 * 7}
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }
 }));
 
 app.use(flash());
@@ -59,6 +59,81 @@ const checkAdmin = (req, res, next) => {
         res.redirect('/dashboard');
     }
 };
+
+app.get('/', (req, res) => {
+    res.render('index', { user: req.session.user, messages: req.flash('success') });
+});
+
+app.get('/login', (req, res) => {
+    res.render('login', {
+        messages: req.flash('success'),
+        errors: req.flash('error')
+    });
+});
+
+//******** TODO: Insert code for login routes for form submission below ********//
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    // Validate email and password
+    if (!email || !password) {
+        req.flash('error', 'All fields are required.');
+        return res.redirect('/login');
+    }
+
+    const sql = 'SELECT * FROM users WHERE email = ? AND password = SHA1(?)';
+    db.query(sql, [email, password], (err, results) => {
+        if (err) {
+            throw err;
+        }
+
+        if (results.length > 0) {
+            // Successful login
+            req.session.user = results[0]; // store user in session
+            req.flash('success', 'Login successful!');
+            //******** TO DO: Update to redirect users to /dashboard route upon successful log in ********//
+            res.redirect('/dashboard');
+        } else {
+            // Invalid credentials
+            req.flash('error', 'Invalid email or password.');
+            res.redirect('/login');
+        }
+    });
+});
+app.get('/register', (req, res) => {
+    res.render('register', { messages: req.flash('error'), formData: req.flash('formData')[0] });
+});
+
+
+//******** TODO: Create a middleware function validateRegistration ********//
+const validateRegistration = (req, res, next) => {
+    const { username, email, password, } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).send('All fields are required.');
+    }
+
+    if (password.length < 6) {
+        req.flash('error', 'Password should be at least 6 or more characters long');
+        req.flash('formData', req.body);
+        return res.redirect('/register');
+    }
+    next();
+};
+
+
+//******** TODO: Integrate validateRegistration into the register route. ********//
+app.post('/register', validateRegistration, (req, res) => {
+    //******** TODO: Update register route to include role. ********//
+    const { username, email, password, role } = req.body;
+
+    const sql = 'INSERT INTO users (username, email, password, role) VALUES (?, ?, SHA1(?), ?)';
+    db.query(sql, [username, email, password, role], (err, result) => {
+        if (err) throw err;
+        req.flash('success', 'Registration successful! Please log in.');
+        res.redirect('/login');
+    });
+});
 
 // Starting the server
 app.listen(3000, () => {
