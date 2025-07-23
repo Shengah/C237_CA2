@@ -27,14 +27,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 
-app.use(session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: true,
-    // Session expires after 1 week of inactivity
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }
-}));
-
 app.use(flash());
 
 
