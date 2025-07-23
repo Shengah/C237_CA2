@@ -2,11 +2,24 @@
 
 const express = require('express');
 const mysql = require('mysql2');
-
+const multer = require('multer');
 
 const session = require('express-session');
 const flash = require('connect-flash');
 const app = express();
+
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images'); // Directory to save upload file
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // Database connection
 const db = mysql.createConnection({
@@ -123,12 +136,13 @@ const validateRegistration = (req, res, next) => {
 
 
 //******** TODO: Integrate validateRegistration into the register route. ********//
-app.post('/register', validateRegistration, (req, res) => {
+app.post('/register', upload.single('profilepic'), validateRegistration, (req, res) => {
     //******** TODO: Update register route to include role. ********//
+    const profilepic = req.file ? req.file.filename : null;
     const { username, email, password, role } = req.body;
 
-    const sql = 'INSERT INTO users (username, email, password, role) VALUES (?, ?, SHA1(?), ?)';
-    db.query(sql, [username, email, password, role], (err, result) => {
+    const sql = 'INSERT INTO users (profilepic, username, email, password, role) VALUES (?,?, ?, SHA1(?), ?)';
+    db.query(sql, [profilepic, username, email, password, role], (err, result) => {
         if (err) throw err;
         req.flash('success', 'Registration successful! Please log in.');
         res.redirect('/login');
