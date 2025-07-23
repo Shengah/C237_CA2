@@ -1,148 +1,117 @@
-<!DOCTYPE html>
-<html>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <i class="fa-solid fa-moon me-1"></i> Lunar
+    </a>
 
-<head>
-    <title>Lunar</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-<body>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link hoverable" href="#"><i class="fa-solid fa-house me-1"></i>Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link hoverable" href="#"><i class="fa fa-bed me-1"></i>Sleep Tracker</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link hoverable" href="#"><i class="fa-solid fa-circle-info me-1"></i>About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link hoverable" href="/login"><i class="fa-solid fa-circle-user me-1"></i></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand text-white d-flex align-items-center" href="#">
-                	<i class="fa-solid fa-moon"></i> Lunar
-            </a>
+<style>
+  .custom-navbar {
+    background-color: #000 !important;
+  }
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+  .custom-navbar .navbar-brand,
+  .custom-navbar .nav-link {
+    color: #fff !important;
+  }
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link hoverable" id="len1" href="#"><i class="fa-solid fa-house me-1"></i>Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link hoverable" id="len2" href="#"><i class="fa fa-bed me-1"></i></i>Sleep Tracker</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link hoverable" id="len3" href="#"><i
-                                class="fa-solid fa-user me-1"></i>Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link hoverable" id="len5" href="/login"><i
-                                class="fa-solid fa-circle-user me-1"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+  .custom-navbar .nav-link:hover {
+    color: #ccc !important;
+  }
 
-    <style>
-        .navbar-light .navbar-brand {
-            color: #fff;
-            font-size: 16px;
-            /* Matches nav-link text */
-            font-weight: 500;
-            /* Less bold than before */
-            letter-spacing: 0;
-            /* No extra wide spacing */
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            /* Space between icon and text */
-            text-transform: none;
-        }
+  .navbar-toggler {
+    background: #fff;
+  }
 
-        .navbar-light .navbar-nav .nav-link {
-            color: #fff;
-        }
+  .hoverable {
+    display: inline-block;
+    backface-visibility: hidden;
+    vertical-align: middle;
+    position: relative;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    transform: translateZ(0);
+    transition-duration: 0.3s;
+    transition-property: transform;
+  }
 
-        .navbar-light .navbar-nav .nav-link:hover,
-        .navbar-light .navbar-nav .nav-link:focus {
-            color: #ddd;
-        }
+  .hoverable:before {
+    position: absolute;
+    pointer-events: none;
+    z-index: -1;
+    content: '';
+    top: 100%;
+    left: 5%;
+    height: 10px;
+    width: 90%;
+    opacity: 0;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%);
+    transition-duration: 0.3s;
+    transition-property: transform, opacity;
+  }
 
-        .navbar-toggler {
-            background: #fff;
-        }
+  .hoverable:hover,
+  .hoverable:focus {
+    transform: translateY(-5px);
+  }
 
-        .hoverable {
-            display: inline-block;
-            backface-visibility: hidden;
-            vertical-align: middle;
-            position: relative;
-            box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-            transform: translateZ(0);
-            transition-duration: 0.3s;
-            transition-property: transform;
-        }
+  .hoverable:hover:before,
+  .hoverable:focus:before {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
 
-        .hoverable:before {
-            position: absolute;
-            pointer-events: none;
-            z-index: -1;
-            content: '';
-            top: 100%;
-            left: 5%;
-            height: 10px;
-            width: 90%;
-            opacity: 0;
-            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%);
-            transition-duration: 0.3s;
-            transition-property: transform, opacity;
-        }
+  @keyframes bounce-animation {
+    16.65% {
+      transform: translateY(8px);
+    }
 
-        .hoverable:hover,
-        .hoverable:focus {
-            transform: translateY(-5px);
-        }
+    33.3% {
+      transform: translateY(-6px);
+    }
 
-        .hoverable:hover:before,
-        .hoverable:focus:before {
-            opacity: 1;
-            transform: translateY(-5px);
-        }
+    49.95% {
+      transform: translateY(4px);
+    }
 
-        /* ✅ Optional Bounce Animation */
-        @keyframes bounce-animation {
-            16.65% {
-                transform: translateY(8px);
-            }
+    66.6% {
+      transform: translateY(-2px);
+    }
 
-            33.3% {
-                transform: translateY(-6px);
-            }
+    83.25% {
+      transform: translateY(1px);
+    }
 
-            49.95% {
-                transform: translateY(4px);
-            }
+    100% {
+      transform: translateY(0);
+    }
+  }
 
-            66.6% {
-                transform: translateY(-2px);
-            }
-
-            83.25% {
-                transform: translateY(1px);
-            }
-
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        .bounce {
-            animation-name: bounce-animation;
-            animation-duration: 2s;
-        }
-    </style>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</body>
-
-</html>
+  .bounce {
+    animation-name: bounce-animation;
+    animation-duration: 2s;
+  }
+</style>
