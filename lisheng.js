@@ -125,25 +125,25 @@ app.get('/forgot', (req, res) => {
 });
 
 app.post('/forgot', (req, res) => {
-  const { email } = req.body;
-  const sql = 'SELECT * FROM users WHERE email = ?';
-  db.query(sql, [email], (err, results) => {
-    if (err) throw err;
+    const { email } = req.body;
+    const sql = 'SELECT * FROM users WHERE email = ?';
+    db.query(sql, [email], (err, results) => {
+        if (err) throw err;
 
-    if (results.length === 0) {
-      req.flash('error', 'Email not found.');
-      return res.redirect('/forgot');
-    }
+        if (results.length === 0) {
+            req.flash('error', 'Email not found.');
+            return res.redirect('/forgot');
+        }
 
-    // Save email to session temporarily for resetting password
-    req.session.resetEmail = email;
-    res.redirect('/reset');
-  });
+        // Save email to session temporarily for resetting password
+        req.session.resetEmail = email;
+        res.redirect('/reset');
+    });
 });
 
 app.get('/reset', (req, res) => {
-  if (!req.session.resetEmail) return res.redirect('/login');
-  res.render('reset', { errors: req.flash('error') });
+    if (!req.session.resetEmail) return res.redirect('/login');
+    res.render('reset', { errors: req.flash('error') });
 });
 
 // reset password 
