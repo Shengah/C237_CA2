@@ -213,6 +213,12 @@ app.get('/admin/dashboard', checkAuthenticated, checkAdmin, (req, res) => {
     res.render('admin/dashboard', { user: req.session.user });
 });
 
+// logout 
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
+
 // Starting the server
 app.listen(3000, () => {
     console.log('Server started on port 3000');
