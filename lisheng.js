@@ -205,13 +205,78 @@ app.post('/register', upload.single('profilepic'), validateRegistration, (req, r
 
 //******** TODO: Insert code for dashboard route to render dashboard page for users. ********//
 app.get('/dashboard', checkAuthenticated, (req, res) => {
+    const successMsg = req.flash('success');
     res.render('dashboard', { user: req.session.user });
 });
 
 //******** TODO: Insert code for admin route to render dashboard page for admin. ********//
 app.get('/admin/dashboard', checkAuthenticated, checkAdmin, (req, res) => {
+    const successMsg = req.flash('success');
     res.render('admin/dashboard', { user: req.session.user });
 });
+
+app.get('/profile', checkAuthenticated, (req, res) => {
+    res.render('profile', { user: req.session.user });
+});
+
+//editprofile
+app.get('/editprofile', checkAuthenticated, (req, res) => {
+    res.render('editprofile', {
+        user: req.session.user,
+        errors: req.flash('error'),
+        success: req.flash('profileSuccess')
+    });
+});
+
+//edit profile
+app.post('/editprofile', checkAuthenticated, upload.single('profilepic'), (req, res) => {
+    const { username, password, confirmPassword } = req.body;
+    const profilepic = req.file ? req.file.filename : req.session.user.profilepic;
+
+    if (!username) {
+        req.flash('error', 'Username cannot be empty.');
+        return res.redirect('/editprofile');
+    }
+
+    // CASE: user wants to update password
+    if (password) {
+        if (password.length < 6) {
+            req.flash('error', 'Password must be at least 6 characters.');
+            return res.redirect('/editprofile');
+        }
+
+        if (password !== confirmPassword) {
+            req.flash('error', 'Passwords do not match.');
+            return res.redirect('/editprofile');
+        }
+
+        // valid password + confirmation: update all
+        const sql = 'UPDATE users SET username = ?, profilepic = ?, password = SHA1(?) WHERE userId = ?';
+        const params = [username, profilepic, password, req.session.user.userId];
+
+        db.query(sql, params, (err, result) => {
+            if (err) throw err;
+            req.session.user.username = username;
+            req.session.user.profilepic = profilepic;
+            req.flash('profileSuccess', 'Profile updated successfully!');
+            return res.redirect('/editprofile');
+        });
+    } else {
+        // CASE: no password change — only update username and profilepic
+        const sql = 'UPDATE users SET username = ?, profilepic = ? WHERE userId = ?';
+        const params = [username, profilepic, req.session.user.userId];
+
+        db.query(sql, params, (err, result) => {
+            if (err) throw err;
+            req.session.user.username = username;
+            req.session.user.profilepic = profilepic;
+            req.flash('profileSuccess', 'Profile updated successfully!');
+            return res.redirect('/editprofile');
+        });
+    }
+});
+
+
 
 // logout 
 app.get('/logout', (req, res) => {
