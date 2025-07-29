@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sleep Logs</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7f8;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #4a90e2;
+    }
+
+    table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    thead {
+      background: #4a90e2;
+      color: white;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:hover {
+      background: #f1f9ff;
+    }
+
+    .view-button {
+      background-color: #4a90e2;
+      color: white;
+      padding: 6px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+    }
+    .view-button:hover {
+      background-color: #357ABD;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      tbody tr {
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 15px;
+        border-radius: 8px;
+        background: white;
+      }
+      tbody td {
+        padding-left: 50%;
+        position: relative;
+        text-align: right;
+        border-bottom: 1px solid #eee;
+      }
+      tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        padding-left: 10px;
+        font-weight: bold;
+        text-align: left;
+        color: #4a90e2;
+      }
+      .view-button {
+        padding: 8px 16px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Sleep Logs</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Log ID</th>
+        <th>User ID</th>
+        <th>Sleep Date</th>
+        <th>Sleep Time</th>
+        <th>Wake Time</th>
+        <th>Sleep Quality</th>
+        <th>Mood After</th>
+        <th>Notes</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% sleep_logs.forEach(log => { %>
+        <tr>
+          <td data-label="Log ID"><%= log.logId %></td>
+          <td data-label="User ID"><%= log.userId %></td>
+          <td data-label="Sleep Date"><%= log.sleepDate.toISOString().split('T')[0] %></td>
+          <td data-label="Sleep Time"><%= log.sleepTime %></td>
+          <td data-label="Wake Time"><%= log.wakeTime %></td>
+          <td data-label="Sleep Quality"><%= log.sleepQuality %></td>
+          <td data-label="Mood After"><%= log.moodAfter || '-' %></td>
+          <td data-label="Notes"><%= log.notes || '-' %></td>
+          <td data-label="Actions">
+            <a href="/admin/sleeplog/<%= log.logId %>" class="view-button">View</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+</body>
+</html>

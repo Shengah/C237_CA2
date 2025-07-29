@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sleep Log Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7f8;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #4a90e2;
+      margin-bottom: 30px;
+    }
+    .log-details {
+      background: white;
+      border-radius: 8px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .log-details dl {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      row-gap: 15px;
+      column-gap: 10px;
+    }
+    dt {
+      font-weight: 700;
+      color: #4a90e2;
+    }
+    dd {
+      margin: 0;
+    }
+    a.back-link {
+      display: inline-block;
+      margin-top: 25px;
+      color: #4a90e2;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a.back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Sleep Log Details</h1>
+
+  <div class="log-details">
+    <dl>
+      <dt>Log ID:</dt>
+      <dd><%= sleep_log.logId %></dd>
+
+      <dt>User ID:</dt>
+      <dd><%= sleep_log.userId %></dd>
+
+      <dt>Sleep Date:</dt>
+      <dd><%= sleep_log.sleepDate %></dd>
+
+      <dt>Sleep Time:</dt>
+      <dd><%= sleep_log.sleepTime %></dd>
+
+      <dt>Wake Time:</dt>
+      <dd><%= sleep_log.wakeTime %></dd>
+
+      <dt>Sleep Quality:</dt>
+      <dd><%= sleep_log.sleepQuality %></dd>
+
+      <dt>Mood After:</dt>
+      <dd><%= sleep_log.moodAfter || '-' %></dd>
+
+      <dt>Notes:</dt>
+      <dd><%= sleep_log.notes || '-' %></dd>
+    </dl>
+  </div>
+
+  <a href="/admin/sleeplog" class="back-link">&larr; Back to Sleep Logs</a>
+
+</body>
+</html>
