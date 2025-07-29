@@ -40,4 +40,31 @@ const checkAdmin = (req, res, next) => {
     }
 };
 
+//******** TODO: Insert code for dashboard route to render dashboard page for users. ********//
+router.get('/dashboard', checkAuthenticated, (req, res) => {
+    const user = req.session.user;
+
+    if (!user || !user.userId) {
+        req.flash('error', 'User not found in session');
+        return res.redirect('/login');
+    }
+
+    const sql = 'SELECT * FROM sleep_logs WHERE userId = ? ORDER BY sleepDate DESC';
+    db.query(sql, [user.userId], (err, results) => {
+        if (err) throw err;
+
+        res.render('dashboard', {
+            user,
+            sleepLogs: results,
+            success: req.flash('success')
+        });
+    });
+});
+
+//******** TODO: Insert code for admin route to render dashboard page for admin. ********//
+router.get('/admin/dashboard', checkAuthenticated, checkAdmin, (req, res) => {
+    const successMsg = req.flash('success');
+    res.render('admin/dashboard', { user: req.session.user });
+});
+
 module.exports = router;
