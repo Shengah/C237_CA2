@@ -191,8 +191,18 @@ router.post('/register', upload.single('profilepic'), validateRegistration, (req
 
 //******** TODO: Insert code for dashboard route to render dashboard page for users. ********//
 router.get('/dashboard', checkAuthenticated, (req, res) => {
-    const successMsg = req.flash('success');
-    res.render('dashboard', { user: req.session.user });
+     const userId = req.session.user.userId;
+    const sql = 'SELECT * FROM sleeplogs WHERE userId = ? ORDER BY logDate DESC';
+
+    db.query(sql, [userId], (err, results) => {
+        if (err) throw err;
+
+        res.render('dashboard', {
+            user: req.session.user,
+            sleepLogs: results, // ✅ pass to EJS
+            success: req.flash('success')
+        });
+    });
 });
 
 //******** TODO: Insert code for admin route to render dashboard page for admin. ********//
