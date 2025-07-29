@@ -7,7 +7,7 @@
 </head>
 <body>
   <section class="index-image d-flex align-items-center justify-content-center text-center text-white">
-    <div>
+    <div class="text-box p-4">
       <h1 class="display-4 fw-bold">Welcome to Lunar</h1>
       <p class="lead">Your dreams deserve data.</p>
       <a href="/login" class="btn btn-outline-light px-4 mt-3">Login</a>
@@ -16,11 +16,19 @@
 
   <style>
     .index-image {
-      background-image: url('https://i.postimg.cc/bNQp0RDW/1.jpg');
+      background-image: url('/images/moon.jpg');
       background-size: cover;
       background-position: center;
       height: 100vh;
       position: relative;
+    }
+
+    .text-box {
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 600px;
+      width: 100%;
     }
 
     .index-image h1,
