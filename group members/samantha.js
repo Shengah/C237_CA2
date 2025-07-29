@@ -2,26 +2,14 @@
 
 const express = require('express');
 const mysql = require('mysql2');
+const db = require('../db');
 
 
 const session = require('express-session');
 const flash = require('connect-flash');
 const app = express();
+const router = express.Router();
 
-// Database connection
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Republic_C237',
-    database: 'sleeptracker'
-});
-
-db.connect((err) => {
-    if (err) {
-        throw err;
-    }
-    console.log('Connected to database');
-});
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
@@ -52,7 +40,4 @@ const checkAdmin = (req, res, next) => {
     }
 };
 
-// Starting the server
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
-});
+module.exports = router;

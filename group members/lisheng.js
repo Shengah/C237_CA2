@@ -7,7 +7,8 @@ const multer = require('multer');
 const session = require('express-session');
 const flash = require('connect-flash');
 const app = express();
-
+const router = express.Router();
+const db = require('../db');
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -20,21 +21,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-// Database connection
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Republic_C237',
-    database: 'sleeptracker'
-});
-
-db.connect((err) => {
-    if (err) {
-        throw err;
-    }
-    console.log('Connected to database');
-});
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
@@ -73,11 +59,11 @@ const checkAdmin = (req, res, next) => {
     }
 };
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.render('index', { user: req.session.user, messages: req.flash('success') });
 });
 
-app.get('/login', (req, res) => {
+router.get('/login', (req, res) => {
     res.render('login', {
         messages: req.flash('success'),
         errors: req.flash('error')
@@ -85,7 +71,7 @@ app.get('/login', (req, res) => {
 });
 
 //******** TODO: Insert code for login routes for form submission below ********//
-app.post('/login', (req, res) => {
+router.post('/login', (req, res) => {
     const { email, password } = req.body;
 
     // Validate email and password
@@ -120,11 +106,11 @@ app.post('/login', (req, res) => {
 });
 
 // forgot password page
-app.get('/forgot', (req, res) => {
+router.get('/forgot', (req, res) => {
     res.render('forgot', { errors: req.flash('error'), messages: req.flash('success') });
 });
 
-app.post('/forgot', (req, res) => {
+router.post('/forgot', (req, res) => {
     const { email } = req.body;
     const sql = 'SELECT * FROM users WHERE email = ?';
     db.query(sql, [email], (err, results) => {
@@ -141,13 +127,13 @@ app.post('/forgot', (req, res) => {
     });
 });
 
-app.get('/reset', (req, res) => {
+router.get('/reset', (req, res) => {
     if (!req.session.resetEmail) return res.redirect('/login');
     res.render('reset', { errors: req.flash('error') });
 });
 
 // reset password 
-app.post('/reset', (req, res) => {
+router.post('/reset', (req, res) => {
     const email = req.session.resetEmail;
     const { password } = req.body;
 
@@ -167,7 +153,7 @@ app.post('/reset', (req, res) => {
     });
 });
 
-app.get('/register', (req, res) => {
+router.get('/register', (req, res) => {
     res.render('register', { messages: req.flash('error'), formData: req.flash('formData')[0] });
 });
 
@@ -190,7 +176,7 @@ const validateRegistration = (req, res, next) => {
 
 
 //******** TODO: Integrate validateRegistration into the register route. ********//
-app.post('/register', upload.single('profilepic'), validateRegistration, (req, res) => {
+router.post('/register', upload.single('profilepic'), validateRegistration, (req, res) => {
     //******** TODO: Update register route to include role. ********//
     const profilepic = req.file ? req.file.filename : null;
     const { username, email, password, role } = req.body;
@@ -204,23 +190,23 @@ app.post('/register', upload.single('profilepic'), validateRegistration, (req, r
 });
 
 //******** TODO: Insert code for dashboard route to render dashboard page for users. ********//
-app.get('/dashboard', checkAuthenticated, (req, res) => {
+router.get('/dashboard', checkAuthenticated, (req, res) => {
     const successMsg = req.flash('success');
     res.render('dashboard', { user: req.session.user });
 });
 
 //******** TODO: Insert code for admin route to render dashboard page for admin. ********//
-app.get('/admin/dashboard', checkAuthenticated, checkAdmin, (req, res) => {
+router.get('/admin/dashboard', checkAuthenticated, checkAdmin, (req, res) => {
     const successMsg = req.flash('success');
     res.render('admin/dashboard', { user: req.session.user });
 });
 
-app.get('/profile', checkAuthenticated, (req, res) => {
+router.get('/profile', checkAuthenticated, (req, res) => {
     res.render('profile', { user: req.session.user });
 });
 
 //editprofile
-app.get('/editprofile', checkAuthenticated, (req, res) => {
+router.get('/editprofile', checkAuthenticated, (req, res) => {
     res.render('editprofile', {
         user: req.session.user,
         errors: req.flash('error'),
@@ -229,7 +215,7 @@ app.get('/editprofile', checkAuthenticated, (req, res) => {
 });
 
 //edit profile
-app.post('/editprofile', checkAuthenticated, upload.single('profilepic'), (req, res) => {
+router.post('/editprofile', checkAuthenticated, upload.single('profilepic'), (req, res) => {
     const { username, password, confirmPassword } = req.body;
     const profilepic = req.file ? req.file.filename : req.session.user.profilepic;
 
@@ -279,12 +265,9 @@ app.post('/editprofile', checkAuthenticated, upload.single('profilepic'), (req, 
 
 
 // logout 
-app.get('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 });
 
-// Starting the server
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
-});
+module.exports = router;

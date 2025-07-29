@@ -1,58 +1,40 @@
-//main app.js, shared
-
 const express = require('express');
-const mysql = require('mysql2');
-
-
+const app = express();
 const session = require('express-session');
 const flash = require('connect-flash');
-const app = express();
+const path = require('path');
+require('./db');
 
-// Database connection
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Republic_C237',
-    database: 'sleeptracker'
-});
-
-db.connect((err) => {
-    if (err) {
-        throw err;
-    }
-    console.log('Connected to database');
-});
-
+// Middleware setup
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
-
-
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 3 }
+}));
 app.use(flash());
 
-
-app.set('view engine', 'ejs');
-
-
-const checkAuthenticated = (req, res, next) => {
-    if (req.session.user) {
-        return next();
-    } else {
-        req.flash('error', 'Please log in to view this resource');
-        res.redirect('/login');
-    }
-};
+const lishengRoutes = require('./group members/lisheng');
+const chloeRoutes = require('./group members/chloe');
+const samanthaRoutes = require('./group members/samantha');
+const ShuyuRoutes = require('./group members/Shuyu');
+const verrynRoutes = require('./group members/verryn');
+const xianglingRoutes = require('./group members/xiangling');
 
 
-const checkAdmin = (req, res, next) => {
-    if (req.session.user.role === 'admin') {
-        return next();
-    } else {
-        req.flash('error', 'Access denied');
-        res.redirect('/dashboard');
-    }
-};
 
-// Starting the server
+app.use('/', lishengRoutes);
+app.use('/', chloeRoutes);
+app.use('/', samanthaRoutes);
+app.use('/', ShuyuRoutes);
+app.use('/', verrynRoutes);
+app.use('/', xianglingRoutes);
+
+
 app.listen(3000, () => {
     console.log('Server started on port 3000');
 });
