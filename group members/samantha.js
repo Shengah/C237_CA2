@@ -53,9 +53,20 @@ router.get('/dashboard', checkAuthenticated, (req, res) => {
     db.query(sql, [user.userId], (err, results) => {
         if (err) throw err;
 
+        let averageDuration = 'N/A';
+        let latestLog = { date: 'No logs' };
+
+        if (results.length > 0) {
+            const total = results.reduce((sum, log) => sum + parseFloat(log.duration), 0);
+            averageDuration = (total / results.length).toFixed(2);
+            latestLog = results[0]; //Most recent entry
+        } 
+
         res.render('dashboard', {
             user,
             sleepLogs: results,
+            averageDuration,
+            latestLog,
             success: req.flash('success')
         });
     });
