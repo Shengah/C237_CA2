@@ -1,12 +1,12 @@
 // db.js
+require('dotenv').config();
 const mysql = require('mysql2');
 
-// Create a single shared connection
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Republic_C237',
-  database: 'sleeptracker'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
 // Connect once
