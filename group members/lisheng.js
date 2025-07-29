@@ -252,6 +252,20 @@ router.post('/editprofile', checkAuthenticated, upload.single('profilepic'), (re
     }
 });
 
+router.post('/deleteaccount', checkAuthenticated, (req, res) => {
+    const userId = req.session.user.userId;
+
+    const sql = 'DELETE FROM users WHERE userId = ?';
+    db.query(sql, [userId], (err, result) => {
+        if (err) throw err;
+
+        // Destroy session after deletion
+        req.session.destroy((err) => {
+            if (err) throw err;
+            res.redirect('/'); // Redirect wherever you want after deletion
+        });
+    });
+});
 
 
 // logout 
