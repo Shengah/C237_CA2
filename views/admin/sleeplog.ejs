@@ -1,22 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sleep Logs</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f4f7f8;
+      background: #000000;
       color: #333;
       margin: 0;
       padding: 20px;
+      padding-top: 60px;
+      /* Add this to prevent navbar overlap */
     }
+
+    .snow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .snowflake {
+      position: absolute;
+      background-color: #fff;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+
 
     h1 {
       text-align: center;
       margin-bottom: 30px;
-      color: #6c757dcc;
+      color: #ffffffcc;
     }
 
     table {
@@ -25,7 +56,7 @@
       margin: 0 auto;
       border-collapse: collapse;
       background: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       overflow: hidden;
     }
@@ -35,7 +66,8 @@
       color: white;
     }
 
-    th, td {
+    th,
+    td {
       padding: 12px 15px;
       text-align: left;
       border-bottom: 1px solid #ddd;
@@ -55,30 +87,41 @@
       transition: background-color 0.3s ease;
       display: inline-block;
     }
+
     .view-button:hover {
       background-color: #357ABD;
     }
 
     @media (max-width: 768px) {
-      table, thead, tbody, th, td, tr {
+
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
         display: block;
       }
+
       thead tr {
         display: none;
       }
+
       tbody tr {
         margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         padding: 15px;
         border-radius: 8px;
         background: white;
       }
+
       tbody td {
         padding-left: 50%;
         position: relative;
         text-align: right;
         border-bottom: 1px solid #eee;
       }
+
       tbody td::before {
         content: attr(data-label);
         position: absolute;
@@ -89,6 +132,7 @@
         text-align: left;
         color: #4a90e2;
       }
+
       .view-button {
         padding: 8px 16px;
         font-size: 1rem;
@@ -96,108 +140,89 @@
     }
   </style>
 </head>
+
 <body>
+  <%- include('../style') %>
+    <div class="snow" id="snow-container"></div>
+    <h1>Sleep Logs</h1>
 
-  <h1>Sleep Logs</h1>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Log ID</th>
-        <th>User ID</th>
-        <th>Sleep Date</th>
-        <th>Sleep Time</th>
-        <th>Wake Time</th>
-        <th>Sleep Quality</th>
-        <th>Mood After</th>
-        <th>Notes</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% sleep_logs.forEach(log => { %>
+    <table>
+      <thead>
         <tr>
-          <td data-label="Log ID"><%= log.logId %></td>
-          <td data-label="User ID"><%= log.userId %></td>
-          <td data-label="Sleep Date"><%= log.sleepDate.toISOString().split('T')[0]  %></td>
-          <td data-label="Sleep Time"><%= log.sleepTime %></td>
-          <td data-label="Wake Time"><%= log.wakeTime %></td>
-          <td data-label="Sleep Quality"><%= log.sleepQuality %></td>
-          <td data-label="Mood After"><%= log.moodAfter || '-' %></td>
-          <td data-label="Notes"><%= log.notes || '-' %></td>
-          <td data-label="Actions">
-            <a href="/admin/sleeplog/<%= log.logId %>" class="view-button">View</a>
-          </td>
+          <th>Log ID</th>
+          <th>User ID</th>
+          <th>Sleep Date</th>
+          <th>Sleep Time</th>
+          <th>Wake Time</th>
+          <th>Sleep Quality</th>
+          <th>Mood After</th>
+          <th>Notes</th>
+          <th>Actions</th>
         </tr>
-      <% }) %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% sleep_logs.forEach(log=> { %>
+          <tr>
+            <td data-label="Log ID">
+              <%= log.logId %>
+            </td>
+            <td data-label="User ID">
+              <%= log.userId %>
+            </td>
+            <td data-label="Sleep Date">
+              <%= log.sleepDate.toISOString().split('T')[0] %>
+            </td>
+            <td data-label="Sleep Time">
+              <%= log.sleepTime %>
+            </td>
+            <td data-label="Wake Time">
+              <%= log.wakeTime %>
+            </td>
+            <td data-label="Sleep Quality">
+              <%= log.sleepQuality %>
+            </td>
+            <td data-label="Mood After">
+              <%= log.moodAfter || '-' %>
+            </td>
+            <td data-label="Notes">
+              <%= log.notes || '-' %>
+            </td>
+            <td data-label="Actions">
+              <a href="/admin/sleeplog/<%= log.logId %>" class="view-button">View</a>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const snowContainer = document.getElementById('snow-container');
 
+        function createSnowflake() {
+          const snowflake = document.createElement('div');
+          snowflake.className = 'snowflake';
+
+          const size = Math.random() * 4 + 1;
+          snowflake.style.width = `${size}px`;
+          snowflake.style.height = `${size}px`;
+          snowflake.style.left = `${Math.random() * 100}vw`;
+          const duration = Math.random() * 7 + 3;
+          snowflake.style.animationDuration = `${duration}s`;
+          snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+
+          snowContainer.appendChild(snowflake);
+          setTimeout(() => snowflake.remove(), duration * 1000);
+        }
+
+        for (let i = 0; i < 100; i++) {
+          setTimeout(createSnowflake, Math.random() * 5000);
+        }
+
+        setInterval(createSnowflake, 300);
+      });
+    </script>
 </body>
 
-<body>
-    <!-- ⭐ Starry Background -->
-    <canvas id="stars"></canvas>
-
-    <!-- 🌙 Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <i class="fa-solid fa-moon me-2"></i> Lunar
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link hoverable" id="len4" href="#"><i
-                                class="fa-solid fa-envelope me-1"></i>Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- 🌠 Star animation script -->
-    <script>
-        const canvas = document.getElementById('stars');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const stars = [];
-        for (let i = 0; i < 120; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5,
-                speed: Math.random() * 0.5 + 0.1,
-            });
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#ffffff";
-            stars.forEach(star => {
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fill();
-                star.y += star.speed;
-                if (star.y > canvas.height) {
-                    star.y = 0;
-                    star.x = Math.random() * canvas.width;
-                }
-            });
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-    </script>
-
-  </body>
 </html>

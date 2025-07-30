@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,7 +8,7 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f4f7f8;
+      background: #000000;
       color: #333;
       margin: 0;
       padding: 20px;
@@ -15,75 +16,154 @@
       margin-left: auto;
       margin-right: auto;
     }
+
+    .snow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .snowflake {
+      position: absolute;
+      background-color: #fff;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+
     h1 {
       text-align: center;
-      color: #6c757dcc;
+      color: #ffffff;
       margin-bottom: 30px;
     }
+
     .log-details {
       background: white;
       border-radius: 8px;
       padding: 25px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
+
     .log-details dl {
       display: grid;
       grid-template-columns: 150px 1fr;
       row-gap: 15px;
       column-gap: 10px;
     }
+
     dt {
       font-weight: 700;
       color: #6c757dcc;
     }
+
     dd {
       margin: 0;
     }
+
     a.back-link {
       display: inline-block;
       margin-top: 25px;
-      color: #6c757dcc;
+      color: #ffffff;
       text-decoration: none;
       font-weight: 600;
     }
+
     a.back-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
+
 <body>
+  <div class="snow" id="snow-container"></div>
 
   <h1>Sleep Log Details</h1>
 
   <div class="log-details">
     <dl>
       <dt>Log ID:</dt>
-      <dd><%= sleep_log.logId %></dd>
+      <dd>
+        <%= sleep_log.logId %>
+      </dd>
 
       <dt>User ID:</dt>
-      <dd><%= sleep_log.userId %></dd>
+      <dd>
+        <%= sleep_log.userId %>
+      </dd>
 
       <dt>Sleep Date:</dt>
-      <dd><%= sleep_log.sleepDate %></dd>
+      <dd>
+        <%= new Date(sleep_log.sleepDate).toLocaleDateString('en-GB', { weekday: 'short' , day: '2-digit' ,
+          month: 'short' , year: 'numeric' }) %>
+      </dd>
 
       <dt>Sleep Time:</dt>
-      <dd><%= sleep_log.sleepTime %></dd>
+      <dd>
+        <%= sleep_log.sleepTime %>
+      </dd>
 
       <dt>Wake Time:</dt>
-      <dd><%= sleep_log.wakeTime %></dd>
+      <dd>
+        <%= sleep_log.wakeTime %>
+      </dd>
 
       <dt>Sleep Quality:</dt>
-      <dd><%= sleep_log.sleepQuality %></dd>
+      <dd>
+        <%= sleep_log.sleepQuality %>
+      </dd>
 
       <dt>Mood After:</dt>
-      <dd><%= sleep_log.moodAfter || '-' %></dd>
+      <dd>
+        <%= sleep_log.moodAfter || '-' %>
+      </dd>
 
       <dt>Notes:</dt>
-      <dd><%= sleep_log.notes || '-' %></dd>
+      <dd>
+        <%= sleep_log.notes || '-' %>
+      </dd>
     </dl>
   </div>
 
   <a href="/admin/sleeplog" class="back-link">&larr; Back to Sleep Logs</a>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const snowContainer = document.getElementById('snow-container');
+
+      function createSnowflake() {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+
+        const size = Math.random() * 4 + 1;
+        snowflake.style.width = `${size}px`;
+        snowflake.style.height = `${size}px`;
+        snowflake.style.left = `${Math.random() * 100}vw`;
+        const duration = Math.random() * 7 + 3;
+        snowflake.style.animationDuration = `${duration}s`;
+        snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+
+        snowContainer.appendChild(snowflake);
+        setTimeout(() => snowflake.remove(), duration * 1000);
+      }
+
+      for (let i = 0; i < 100; i++) {
+        setTimeout(createSnowflake, Math.random() * 5000);
+      }
+
+      setInterval(createSnowflake, 300);
+    });
+  </script>
+
 </body>
+
 </html>
