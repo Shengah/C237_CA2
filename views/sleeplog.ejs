@@ -1,11 +1,66 @@
+<!-- views/user/sleeplog.ejs -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><%= user.username %>'s Sleep Logs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
-    
+    <h1>Hello, <%= user.username %>!</h1>
+    <h2>Your Sleep Logs</h2>
+
+    <% if (sleep_logs.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Sleep Time</th>
+                    <th>Wake Time</th>
+                    <th>Duration (hrs)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% sleep_logs.forEach(function(log) { %>
+                    <tr>
+                        <td><%= new Date(log.date).toISOString().slice(0, 10) %></td>
+                        <td><%= log.sleepTime %></td>
+                        <td><%= log.wakeTime %></td>
+                        <td><%= log.duration %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No sleep logs found.</p>
+    <% } %>
 </body>
 </html>
