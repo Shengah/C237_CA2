@@ -70,6 +70,10 @@ router.get('/login', (req, res) => {
     });
 });
 
+router.get('/about', (req, res) => {
+    res.render('about', { user: req.session.user });
+});
+
 //******** TODO: Insert code for login routes for form submission below ********//
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
