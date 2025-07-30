@@ -84,7 +84,44 @@ router.post('/sleep-logs/:id/delete', checkAuthenticated, async (req, res) => {
 });
 
 
+// For admin deletes (if this is an admin-specific operation)
+router.post('/admin/sleep-logs/:id/delete', checkAuthenticated, checkAdmin, async (req, res) => {
+    const sleepLogId = req.params.id;
 
+    try {
+        await db.promise().query('DELETE FROM sleep_logs WHERE logId = ?', [sleepLogId]);
+        req.flash('success', 'Log deleted successfully');
+        res.redirect('/admin/dashboard');
+    } catch (err) {
+        console.error('Error deleting log:', err);
+        req.flash('error', 'Failed to delete log');
+        res.redirect('/admin/dashboard');
+    }
+});
+
+// For user deletes (if users should delete their own logs)
+router.post('/sleep-logs/:id/delete', checkAuthenticated, async (req, res) => {
+    const sleepLogId = req.params.id;
+    const userId = req.session.user.userId;
+
+    try {
+        const [result] = await db.promise().query(
+            'DELETE FROM sleep_logs WHERE logId = ? AND userId = ?',
+            [sleepLogId, userId]
+        );
+        
+        if (result.affectedRows === 0) {
+            req.flash('error', 'Log not found or not authorized');
+        } else {
+            req.flash('success', 'Log deleted successfully');
+        }
+        res.redirect('/dashboard');
+    } catch (err) {
+        console.error('Error deleting log:', err);
+        req.flash('error', 'Failed to delete log');
+        res.redirect('/dashboard');
+    }
+});
 
 
 

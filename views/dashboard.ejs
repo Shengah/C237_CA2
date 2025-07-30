@@ -161,7 +161,7 @@
                     <i class="fa-solid fa-pen-to-square"></i>
                   </a>
                   <form action="/sleep-logs/<%= log.logId %>/delete" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-danger">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('This will DELETE YOUR SLEEPLOG. CONTINUE?')">
                       <i class="fa-solid fa-trash-can"></i>
                     </button>
                   </form>
