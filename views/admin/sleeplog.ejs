@@ -16,7 +16,7 @@
     h1 {
       text-align: center;
       margin-bottom: 30px;
-      color: #4a90e2;
+      color: #6c757dcc;
     }
 
     table {
@@ -31,7 +31,7 @@
     }
 
     thead {
-      background: #4a90e2;
+      background: #6c757dcc;
       color: white;
     }
 
@@ -46,7 +46,7 @@
     }
 
     .view-button {
-      background-color: #4a90e2;
+      background-color: #6c757dcc;
       color: white;
       padding: 6px 12px;
       text-decoration: none;
@@ -134,4 +134,70 @@
   </table>
 
 </body>
+
+<body>
+    <!-- ⭐ Starry Background -->
+    <canvas id="stars"></canvas>
+
+    <!-- 🌙 Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fa-solid fa-moon me-2"></i> Lunar
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link hoverable" id="len4" href="#"><i
+                                class="fa-solid fa-envelope me-1"></i>Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 🌠 Star animation script -->
+    <script>
+        const canvas = document.getElementById('stars');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        for (let i = 0; i < 120; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5,
+                speed: Math.random() * 0.5 + 0.1,
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#ffffff";
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+                star.y += star.speed;
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+  </body>
 </html>

@@ -74,5 +74,28 @@ router.get('/admin/sleeplog/:id', checkAuthenticated, (req, res) => {
     });
 });
 
+// Get sleep logs for the logged-in user
+router.get('/user/sleeplog', checkAuthenticated, (req, res) => {
+    const user = req.session.user;
+
+    if (!user || !user.id) {
+        console.error('User not authenticated or missing ID');
+        return res.status(401).send('Unauthorized');
+    }
+
+    const sql = 'SELECT * FROM sleep_logs WHERE userId = ? ORDER BY date DESC';
+
+    db.query(sql, [user.id], (error, results) => {
+        if (error) {
+            console.error('Database query error:', error);
+            return res.status(500).send('Error retrieving your sleep logs');
+        }
+
+        res.render('user/sleeplog', {
+            user,
+            sleep_logs: results
+        });
+    });
+});
 
 module.exports = router;
