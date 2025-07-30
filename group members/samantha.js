@@ -60,7 +60,7 @@ router.get('/dashboard', checkAuthenticated, (req, res) => {
             const total = results.reduce((sum, log) => sum + parseFloat(log.duration), 0);
             averageDuration = (total / results.length).toFixed(2);
             latestLog = results[0]; //Most recent entry
-        } 
+        }
 
         res.render('dashboard', {
             user,
@@ -76,6 +76,30 @@ router.get('/dashboard', checkAuthenticated, (req, res) => {
 router.get('/admin/dashboard', checkAuthenticated, checkAdmin, (req, res) => {
     const successMsg = req.flash('success');
     res.render('admin/dashboard', { user: req.session.user });
+});
+
+router.get('/addlog', (req, res) => {
+    res.render('addlog'); // renders the form page
+});
+
+router.post('/addlog', checkAuthenticated, (req, res) => {
+    console.log('Session User:', req.session.user);
+    const { sleepDate, sleepTime, wakeTime, notes, moodAfter } = req.body;
+    const userId = req.session.user.userId; // <- Fix here
+
+    const sql = `
+      INSERT INTO sleep_logs (userId, sleepDate, sleepTime, wakeTime, notes, moodAfter)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(sql, [userId, sleepDate, sleepTime, wakeTime, notes, moodAfter], (err) => {
+        if (err) {
+            console.error('Failed to insert sleep log:', err);
+            return res.status(500).send('Error saving log');
+        }
+        req.flash('success', 'Sleep log added!');
+        res.redirect('/dashboard');
+    });
 });
 
 module.exports = router;
