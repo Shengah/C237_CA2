@@ -114,13 +114,17 @@
       </form>
 
       <div class="text-end mb-3">
+        <a href="#logs-section" class="btn btn-outline-light me-2">
+          <i class="fa-solid fa-book-open-reader me-1"></i> View My Logs
+        </a>
         <a href="/addlog" class="btn btn-primary">
           <i class="fa-solid fa-circle-plus me-1"></i> Add Sleep Log
         </a>
       </div>
+      
 
       <% if (sleepLogs.length> 0) { %>
-        <div class="table-responsive">
+        <div class="table-responsive" id="logs-section">
           <table class="table table-dark table-striped table-hover rounded">
             <thead class="table-light text-dark">
               <tr>

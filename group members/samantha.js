@@ -74,8 +74,16 @@ router.get('/dashboard', checkAuthenticated, (req, res) => {
 
 //******** TODO: Insert code for admin route to render dashboard page for admin. ********//
 router.get('/admin/dashboard', checkAuthenticated, checkAdmin, (req, res) => {
-    const successMsg = req.flash('success');
-    res.render('admin/dashboard', { user: req.session.user });
+    const sql = 'SELECT * FROM sleep_logs ORDER BY sleepDate DESC';
+
+    db.query(sql, (err, results) => {
+        if (err) throw err;
+
+        res.render('admin/dashboard', {
+            user: req.session.user,
+            sleepLogs: results // send all logs
+        });
+    });
 });
 
 router.get('/addlog', (req, res) => {
