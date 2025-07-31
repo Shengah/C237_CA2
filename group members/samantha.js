@@ -92,15 +92,15 @@ router.get('/addlog', (req, res) => {
 
 router.post('/addlog', checkAuthenticated, (req, res) => {
     console.log('Session User:', req.session.user);
-    const { sleepDate, sleepTime, wakeTime, notes, moodAfter } = req.body;
+    const { sleepDate, sleepTime, wakeTime, notes, sleepQuality, moodAfter } = req.body;
     const userId = req.session.user.userId; // <- Fix here
 
     const sql = `
-      INSERT INTO sleep_logs (userId, sleepDate, sleepTime, wakeTime, notes, moodAfter)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO sleep_logs (userId, sleepDate, sleepTime, wakeTime, notes, sleepQuality, moodAfter)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
 
-    db.query(sql, [userId, sleepDate, sleepTime, wakeTime, notes, moodAfter], (err) => {
+    db.query(sql, [userId, sleepDate, sleepTime, wakeTime, notes, sleepQuality, moodAfter], (err) => {
         if (err) {
             console.error('Failed to insert sleep log:', err);
             return res.status(500).send('Error saving log');
