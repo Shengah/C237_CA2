@@ -54,12 +54,27 @@ router.get('/dashboard', checkAuthenticated, (req, res) => {
         if (err) throw err;
 
         let averageDuration = 'N/A';
-        let latestLog = { date: 'No logs' };
+        let latestLog = { sleepDate: 'No logs' };
 
         if (results.length > 0) {
-            const total = results.reduce((sum, log) => sum + parseFloat(log.duration), 0);
-            averageDuration = (total / results.length).toFixed(2);
-            latestLog = results[0]; //Most recent entry
+            const total = results.reduce((sum, log) => {
+                let duration = 0;
+
+                // Calculate duration based on sleepTime and wakeTime if duration is missing
+                if (log.sleepTime && log.wakeTime) {
+                    const sleepTime = new Date(`1970-01-01T${log.sleepTime}Z`);
+                    const wakeTime = new Date(`1970-01-01T${log.wakeTime}Z`);
+                    duration = (wakeTime - sleepTime) / (1000 * 60 * 60); // Duration in hours
+                    duration = duration.toFixed(1); 
+                } else {
+                    duration = parseFloat(log.duration) || 0; // Use the stored duration if available
+                }
+                log.duration = duration; // Store the calculated duration back to log
+                return sum + duration;
+            }, 0);
+
+            averageDuration = (results.length > 0) ? (total / results.length).toFixed(2) : 'N/A'; // Average in hours
+            latestLog = results[0]; // Most recent entry
         }
 
         res.render('dashboard', {

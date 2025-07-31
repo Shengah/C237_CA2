@@ -125,9 +125,6 @@
                 <td><%= log.duration %></td>
                 <td><%= log.notes %></td>
                 <td class="text-center">
-                  <a href="/admin/sleep_logs/<%= log.id %>/edit" class="btn btn-sm btn-warning me-1">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                  </a>
                   <form action="/admin/sleep-logs/<%= log.logId %>/delete" method="POST" class="d-inline">
                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('This will DELETE SLEEPLOG. CONTINUE?')">
                       <i class="fa-solid fa-trash-can"></i>

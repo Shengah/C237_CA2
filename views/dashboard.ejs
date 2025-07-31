@@ -32,7 +32,7 @@
     }
 
     .snowflake {
-      position: absolute;
+      position: absolute; 
       background-color: #fff;
       border-radius: 50%;
       opacity: 0.8;
@@ -88,15 +88,19 @@
     <div class="container mt-5 pt-5">
       <h2 class="text-white mb-4">Welcome back, <%= user.username %> 💤</h2>
       <!-- Sleep Summary Card -->
+      <!-- Sleep Summary Card -->
       <div class="card bg-secondary text-white mb-4">
         <div class="card-body">
           <h5 class="card-title">Sleep Summary</h5>
           <p class="card-text">Average Duration: <strong>
-              <%= averageDuration %>
-            </strong></p>
+              <%= averageDuration %> hours
+            </strong>
+          </p>
           <p class="card-text">Last Logged: <strong>
-              <%= latestLog.date %>
-            </strong></p>
+              <%= latestLog.sleepDate ? new Date(latestLog.sleepDate).toLocaleDateString('en-GB', { weekday: 'short' ,
+                day: '2-digit' , month: 'short' , year: 'numeric' }) : 'N/A' %>
+            </strong>
+          </p>
         </div>
       </div>
 
@@ -109,7 +113,7 @@
           <i class="fa-solid fa-circle-plus me-1"></i> Add Sleep Log
         </a>
       </div>
-      
+
 
       <% if (sleepLogs.length> 0) { %>
         <div class="table-responsive" id="logs-section">
@@ -126,37 +130,43 @@
             </thead>
             <tbody>
               <% sleepLogs.forEach(log=> { %>
-                <td data-label="Sleep Date">
-                  <%= new Date(log.sleepDate).toLocaleDateString('en-GB', { weekday: 'short' , day: '2-digit' ,
-                    month: 'short' , year: 'numeric' }) %>, GMT+8 (Singapore Standard Time)
-                </td>
-                </td>
+                <tr> <!-- Added opening <tr> tag for each row -->
+                  <td data-label="Sleep Date">
+                    <%= new Date(log.sleepDate).toLocaleDateString('en-GB', { weekday: 'short' , day: '2-digit' ,
+                      month: 'short' , year: 'numeric' }) %>, GMT+8 (Singapore Standard Time)
+                  </td>
 
-                <td>
-                  <%= log.sleepTime %>
-                </td>
-                <td>
-                  <%= log.wakeTime %>
-                </td>
-                <td>
-                  <%= log.duration %>
-                </td>
-                <td>
-                  <%= log.notes %>
-                </td>
-                <td class="text-center">
-                  <a href="/editlog/<%= log.logId %>" class="btn btn-sm btn-warning me-1">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                  </a>
-                  <form action="/sleep-logs/<%= log.logId %>/delete" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('This will DELETE YOUR SLEEPLOG. CONTINUE?')">
-                      <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                  </form>
-                </td>
-                </tr>
+                  <td>
+                    <%= log.sleepTime %>
+                  </td>
+
+                  <td>
+                    <%= log.wakeTime %>
+                  </td>
+
+                  <td>
+                    <%= log.duration || 'N/A' %> hours
+                  </td>
+
+                  <td>
+                    <%= log.notes %>
+                  </td>
+
+                  <td class="text-center">
+                    <a href="/editlog/<%= log.logId %>" class="btn btn-sm btn-warning me-1">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <form action="/sleep-logs/<%= log.logId %>/delete" method="POST" class="d-inline">
+                      <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('This will DELETE YOUR SLEEPLOG. CONTINUE?')">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr> <!-- Closing </tr> tag for each row -->
                 <% }) %>
             </tbody>
+
           </table>
         </div>
         <% } else { %>
@@ -164,6 +174,7 @@
             You haven't added any sleep logs yet. Start tracking your sleep today!
           </div>
           <% } %>
+
     </div>
 
     <!-- JS -->
