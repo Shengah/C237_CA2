@@ -82,96 +82,103 @@
 <body>
   <%- include('../style') %>
 
-  <div class="snow" id="snow-container"></div>
+    <div class="snow" id="snow-container"></div>
 
-  <div class="container mt-5 pt-5">
-    <h2 class="text-white mb-4">Admin Dashboard 🛠️</h2>
+    <div class="container mt-5 pt-5">
+      <h2 class="text-white mb-4">Admin Dashboard 🛠️</h2>
 
-    <!-- View All Logs Button -->
-    <div class="mb-4">
-      <a href="/admin/sleeplog" class="btn btn-primary"> 
-        <i class="fa-solid fa-eye me-2"></i>View All Logs
-      </a>
+      <!-- View All Logs Button -->
+      <div class="mb-4">
+        <a href="/admin/sleeplog" class="btn btn-primary">
+          <i class="fa-solid fa-eye me-2"></i>View All Logs
+        </a>
+      </div>
+
+      <% if (sleepLogs.length> 0) { %>
+        <div class="table-responsive" id="logs-section">
+          <table class="table table-dark table-striped table-hover rounded">
+            <thead class="table-light text-dark">
+              <tr>
+                <th>Username</th>
+                <th>Date</th>
+                <th>Sleep Time</th>
+                <th>Wake Time</th>
+                <th>Duration</th>
+                <th>Notes</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% sleepLogs.forEach(log=> { %>
+                <tr>
+                  <td>
+                    <%= log.username %>
+                  </td>
+                  <td>
+                    <%= new Date(log.sleepDate).toLocaleDateString('en-GB', { weekday: 'short' , day: '2-digit' ,
+                      month: 'short' , year: 'numeric' }) %>
+                  </td>
+                  <td>
+                    <%= log.sleepTime %>
+                  </td>
+                  <td>
+                    <%= log.wakeTime %>
+                  </td>
+                  <td>
+                    <%= log.duration || 'N/A' %> hours
+                  </td>
+                  <td>
+                    <%= log.notes %>
+                  </td>
+                  <td class="text-center">
+                    <form action="/admin/sleep-logs/<%= log.logId %>/delete" method="POST" class="d-inline">
+                      <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('This will DELETE SLEEPLOG. CONTINUE?')">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <% } else { %>
+          <div class="alert alert-secondary text-center text-dark fw-bold">
+            No sleep logs found.
+          </div>
+          <% } %>
     </div>
 
-    <% if (sleepLogs.length > 0) { %>
-      <div class="table-responsive" id="logs-section">
-        <table class="table table-dark table-striped table-hover rounded">
-          <thead class="table-light text-dark">
-            <tr>
-              <th>Username</th>
-              <th>Date</th>
-              <th>Sleep Time</th>
-              <th>Wake Time</th>
-              <th>Duration</th>
-              <th>Notes</th>
-              <th class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% sleepLogs.forEach(log => { %>
-              <tr>
-                <td><%= log.username %></td>
-                <td>
-                  <%= new Date(log.sleepDate).toLocaleDateString('en-GB', {
-                    weekday: 'short',
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                  }) %>
-                </td>
-                <td><%= log.sleepTime %></td>
-                <td><%= log.wakeTime %></td>
-                <td><%= log.duration %></td>
-                <td><%= log.notes %></td>
-                <td class="text-center">
-                  <form action="/admin/sleep-logs/<%= log.logId %>/delete" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('This will DELETE SLEEPLOG. CONTINUE?')">
-                      <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                  </form>
-                </td>
-              </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-    <% } else { %>
-      <div class="alert alert-secondary text-center text-dark fw-bold">
-        No sleep logs found.
-      </div>
-    <% } %>
-  </div>
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const snowContainer = document.getElementById('snow-container');
 
-  <!-- JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const snowContainer = document.getElementById('snow-container');
+        function createSnowflake() {
+          const snowflake = document.createElement('div');
+          snowflake.className = 'snowflake';
 
-      function createSnowflake() {
-        const snowflake = document.createElement('div');
-        snowflake.className = 'snowflake';
+          const size = Math.random() * 4 + 1;
+          snowflake.style.width = `${size}px`;
+          snowflake.style.height = `${size}px`;
+          snowflake.style.left = `${Math.random() * 100}vw`;
+          const duration = Math.random() * 7 + 3;
+          snowflake.style.animationDuration = `${duration}s`;
+          snowflake.style.opacity = Math.random() * 0.5 + 0.3;
 
-        const size = Math.random() * 4 + 1;
-        snowflake.style.width = `${size}px`;
-        snowflake.style.height = `${size}px`;
-        snowflake.style.left = `${Math.random() * 100}vw`;
-        const duration = Math.random() * 7 + 3;
-        snowflake.style.animationDuration = `${duration}s`;
-        snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+          snowContainer.appendChild(snowflake);
+          setTimeout(() => snowflake.remove(), duration * 1000);
+        }
 
-        snowContainer.appendChild(snowflake);
-        setTimeout(() => snowflake.remove(), duration * 1000);
-      }
+        for (let i = 0; i < 100; i++) {
+          setTimeout(createSnowflake, Math.random() * 5000);
+        }
 
-      for (let i = 0; i < 100; i++) {
-        setTimeout(createSnowflake, Math.random() * 5000);
-      }
-
-      setInterval(createSnowflake, 300);
-    });
-  </script>
+        setInterval(createSnowflake, 300);
+      });
+    </script>
 </body>
 
 </html>
