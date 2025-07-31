@@ -145,7 +145,7 @@
                   <%= log.notes %>
                 </td>
                 <td class="text-center">
-                  <a href="/sleeplogs<%= log.id %>/edit" class="btn btn-sm btn-warning me-1">
+                  <a href="/editlog/<%= log.logId %>" class="btn btn-sm btn-warning me-1">
                     <i class="fa-solid fa-pen-to-square"></i>
                   </a>
                   <form action="/sleep-logs/<%= log.logId %>/delete" method="POST" class="d-inline">
