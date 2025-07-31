@@ -74,14 +74,16 @@ router.get('/dashboard', checkAuthenticated, (req, res) => {
 
 //******** TODO: Insert code for admin route to render dashboard page for admin. ********//
 router.get('/admin/dashboard', checkAuthenticated, checkAdmin, (req, res) => {
-    const sql = 'SELECT * FROM sleep_logs ORDER BY sleepDate DESC';
+    // Modify SQL query to join 'users' table and get 'username' alongside 'sleep_logs' data
+    const sql = 'SELECT sleep_logs.*, users.username FROM sleep_logs INNER JOIN users ON users.userId = sleep_logs.userId ORDER BY sleep_logs.sleepDate DESC';
 
     db.query(sql, (err, results) => {
         if (err) throw err;
 
+        // Render the dashboard with user and sleepLogs data
         res.render('admin/dashboard', {
             user: req.session.user,
-            sleepLogs: results // send all logs
+            sleepLogs: results // send all logs along with the username
         });
     });
 });

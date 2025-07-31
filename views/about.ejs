@@ -7,9 +7,10 @@
     <title>About - Lunar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.11/lottie.min.js"></script>
     <style>
         body {
-            background-color: #000;
+            background-color: #000000;
             color: #fff;
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
@@ -50,11 +51,21 @@
             font-size: 1.2rem;
             line-height: 1.8;
         }
+
+        /* Styling for the Lottie animation below the description */
+        #moon {
+            max-width: 300px;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Add height for better visibility */
+        }
     </style>
 </head>
 
 <body>
-    <%- include('style') %>
+    <%- include('style') %> <!-- Assuming you have a style include here -->
+
     <canvas id="stars"></canvas>
 
     <div class="container about-content">
@@ -63,13 +74,28 @@
             Lunar
         </div>
         <div class="description">
-      Sleep is one of the most vital pillars of good health — just like nutrition and exercise. Yet, many people overlook how much rest their body truly needs.
-      <br><br>
-      <i><b>Lunar</b></i> is a sleep tracking app designed to help you understand your sleep patterns and take steps toward better rest. By logging your sleep habits, you'll gain insights into whether you're getting enough sleep to feel refreshed, focused, and healthy.
-      <br><br>
-      Whether you're a student, a professional, or just trying to take better care of your well-being — <i><b>Lunar</b></i> helps you stay aware, informed, and in sync with your body's natural rhythm.
+            Sleep is one of the most vital pillars of good health — just like nutrition and exercise. Yet, many people overlook how much rest their body truly needs.
+            <br><br>
+            <i><b>Lunar</b></i> is a sleep tracking app designed to help you understand your sleep patterns and take steps toward better rest. By logging your sleep habits, you'll gain insights into whether you're getting enough sleep to feel refreshed, focused, and healthy.
+            <br><br>
+            Whether you're a student, a professional, or just trying to take better care of your well-being — <i><b>Lunar</b></i> helps you stay aware, informed, and in sync with your body's natural rhythm.
+        </div>
+
+       <!-- Lottie Animation Below the Description -->
+        <div id="moon"></div>  <!-- Placeholder for the Lottie animation -->
     </div>
-    </div>
+
+    <!-- Lottie Animation Script -->
+    <script>
+        // Load the Lottie animation into the 'moon' div
+        lottie.loadAnimation({
+            container: document.getElementById('moon'),  // The container where the animation will go
+            renderer: 'svg',  // SVG rendering
+            loop: true,       // Loop the animation
+            autoplay: true,   // Start the animation automatically
+            path: '/images/Sleepy Moon.json'  // The correct path to the Lottie JSON file in the public/images folder
+        });
+    </script>
 
     <script>
         const canvas = document.getElementById('stars');

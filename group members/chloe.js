@@ -40,11 +40,14 @@ const checkAdmin = (req, res, next) => {
     }
 };
 
+
+
+
 // GET: load edit form for the specific log (with id)
 router.get('/editlog/:id', checkAuthenticated, (req, res) => {
-    const id = req.params.id; // Get the log id from the URL parameters
+    const id = req.params.id; // Get the log id from the URL parameter
 
-    // Fetch the log from the database using the correct field name 'logId'
+    // Fetch the log from the database using the log_id
     db.query('SELECT * FROM sleep_logs WHERE logId = ?', [id], (err, results) => {
         if (err) {
             console.error(err);
@@ -56,30 +59,30 @@ router.get('/editlog/:id', checkAuthenticated, (req, res) => {
             return res.redirect('/sleeplogs');  // Redirect to all logs if not found
         }
 
-        // Render the editlog page with the log data
         res.render('editlog', {
-            log: results[0],  // Pass the log data to the template
-            isAdmin: !!req.session.admin,  // Check if the logged-in user is an admin
-            messages: req.flash()  // Flash messages for success/error
+            user: req.session.user,  // Pass the user object
+            log: results[0],
+            isAdmin: !!req.session.admin,
+            messages: req.flash()
         });
     });
 });
 
-// POST: update log
+// POST route to update the sleep log
 router.post('/editlog/:id', checkAuthenticated, (req, res) => {
-    const id = req.params.id; // Get the 'id' from the URL parameter
-    const { date, hours, notes } = req.body;
+    const id = req.params.id;  // Get the 'id' from the URL parameter
+    const { date, sleepTime, wakeTime, sleepQuality, moodAfter, notes } = req.body;
 
-    // Check for missing fields
-    if (!date || !hours) {
-        req.flash('error', 'Date and hours are required');
-        return res.redirect(`/editlog/${id}`); // Redirect to the edit page if data is missing
+    // Check for missing fields (you can add validation here)
+    if (!date || !sleepTime || !wakeTime || !sleepQuality) {
+        req.flash('error', 'All fields are required!');
+        return res.redirect(`/editlog/${id}`);  // Redirect to the edit page if any required fields are missing
     }
 
-    // Update the log in the database using the correct field name 'logId'
+    // Update the log in the database using the provided id
     db.query(
-        'UPDATE sleep_logs SET date = ?, hours = ?, notes = ? WHERE logId = ?',
-        [date, hours, notes, id],
+        'UPDATE sleep_logs SET sleepDate = ?, sleepTime = ?, wakeTime = ?, sleepQuality = ?, moodAfter = ?, notes = ? WHERE logId = ?',
+        [date, sleepTime, wakeTime, sleepQuality, moodAfter, notes, id],
         (err) => {
             if (err) {
                 console.error(err);

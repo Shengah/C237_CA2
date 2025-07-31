@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
   <title>Edit Sleep Log</title>
   <!-- Bootstrap CSS -->
@@ -12,9 +13,9 @@
       background-color: #000;
       color: #fff;
       margin: 0;
-      overflow-x: hidden;
+      padding: 20px;
       min-height: 100vh;
-      position: relative;
+      /* Ensures body takes the full screen height */
     }
 
     .snow {
@@ -41,37 +42,23 @@
       }
     }
 
-    .container {
-      position: relative;
-      z-index: 2;
-      padding-top: 50px;
+    /* Centering the form */
+    .form-container {
+      max-width: 500px; /* Adjust the width of the form */
+      margin: 50px auto; /* Center the form vertically and horizontally */
+      padding: 20px;
+      background-color: #1c1c1c;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .message {
-      margin-bottom: 20px;
-      padding: 10px;
-      border-radius: 5px;
+    .form-group {
+      margin-bottom: 15px;
     }
 
-    .message.error {
-      background-color: rgba(220, 53, 69, 0.8);
-    }
-
-    .message.success {
-      background-color: rgba(25, 135, 84, 0.8);
-    }
-
-    form label {
-      display: block;
-      margin-top: 15px;
-    }
-
-    form input, form textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
+    .form-control {
+      height: 40px;
       border-radius: 4px;
-      border: none;
     }
 
     button {
@@ -79,10 +66,88 @@
     }
   </style>
 </head>
-<body>
 
-  <div class="snow">
-    <!-- optional: add snowflake divs dynamically in JS or statically here -->
+<body>
+  <%- include('style') %> <!-- Assuming you have a style include here -->
+
+  <!-- Snow effect -->
+  <div class="snow" id="snow-container"></div>
+
+  <!-- Centered form container -->
+  <div class="form-container">
+    <h2 class="text-white mb-4 text-center">Edit Sleep Log</h2>
+
+    <!-- Form to Edit the Log -->
+    <form action="/editlog/<%= log.logId %>" method="POST">
+      <!-- Sleep Date -->
+      <div class="form-group">
+        <label for="date">Sleep Date:</label>
+        <input type="date" name="date" id="date" value="<%= log.sleepDate.toISOString().split('T')[0] %>" required class="form-control">
+      </div>
+
+      <!-- Sleep Time -->
+      <div class="form-group">
+        <label for="sleepTime">Sleep Time:</label>
+        <input type="time" name="sleepTime" id="sleepTime" value="<%= log.sleepTime %>" required class="form-control">
+      </div>
+
+      <!-- Wake Time -->
+      <div class="form-group">
+        <label for="wakeTime">Wake Time:</label>
+        <input type="time" name="wakeTime" id="wakeTime" value="<%= log.wakeTime %>" required class="form-control">
+      </div>
+
+      <!-- Sleep Quality -->
+      <div class="form-group">
+        <label for="sleepQuality">Sleep Quality:</label>
+        <input type="text" name="sleepQuality" id="sleepQuality" value="<%= log.sleepQuality %>" required class="form-control">
+      </div>
+
+      <!-- Mood After -->
+      <div class="form-group">
+        <label for="moodAfter">Mood After:</label>
+        <input type="text" name="moodAfter" id="moodAfter" value="<%= log.moodAfter || '' %>" class="form-control">
+      </div>
+
+      <!-- Notes -->
+      <div class="form-group">
+        <label for="notes">Notes:</label>
+        <textarea name="notes" id="notes" class="form-control"><%= log.notes || '' %></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Update Log</button>
+    </form>
   </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const snowContainer = document.getElementById('snow-container');
+
+      function createSnowflake() {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+
+        const size = Math.random() * 4 + 1;
+        snowflake.style.width = `${size}px`;
+        snowflake.style.height = `${size}px`;
+        snowflake.style.left = `${Math.random() * 100}vw`;
+        const duration = Math.random() * 7 + 3;
+        snowflake.style.animationDuration = `${duration}s`;
+        snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+
+        snowContainer.appendChild(snowflake);
+        setTimeout(() => snowflake.remove(), duration * 1000);
+      }
+
+      for (let i = 0; i < 100; i++) {
+        setTimeout(createSnowflake, Math.random() * 5000);
+      }
+
+      setInterval(createSnowflake, 300);
+    });
+  </script>
 </body>
+
 </html>
