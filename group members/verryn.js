@@ -93,5 +93,26 @@ router.get('/sleeplogs', checkAuthenticated, (req, res) => {
     });
 });
 
+// User view single sleep log (renders sleeplog_view.ejs for user)
+router.get('/sleeplog_view/:id', checkAuthenticated, (req, res) => {
+    const id = req.params.id;
+    const sql = 'SELECT * FROM sleep_logs WHERE logId = ? AND userId = ?'; // Ensure userId is included in the query for user-specific logs
+
+    db.query(sql, [id, req.session.user.userId], (error, results) => {
+        if (error) {
+            console.error('Database query error:', error.message);
+            return res.status(500).send('Error retrieving sleep log by ID');
+        }
+        if (results.length > 0) {
+            res.render('sleeplog_view', {  // Render the user-specific view
+                user: req.session.user,
+                sleep_log: results[0]
+            });
+        } else {
+            res.status(404).send('Sleep log not found');
+        }
+    });
+});
+
 
 module.exports = router;
