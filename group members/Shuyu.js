@@ -84,4 +84,37 @@ router.get('/admin/sleeplog', checkAuthenticated, checkAdmin, async (req, res) =
   }
 });
 
+router.get('/user/sleeplog/search', checkAuthenticated, async (req, res) => {
+  try {
+    const sleepDate = req.query.sleepDate;
+    
+    if (!sleepDate) {
+      req.flash('error', 'Please enter a User ID to search');
+      return res.redirect('/sleeplogs');
+    }
+
+    const startDate = new Date(sleepDate);
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 1);
+
+    const [logs] = await db.promise().query(
+      `SELECT * FROM sleep_logs 
+      WHERE sleepDate >= ? AND sleepDate < ? 
+      ORDER BY sleepDate DESC`,
+      [startDate, endDate]
+    );
+
+    res.render('sleeplogs', {
+      sleep_logs: logs,
+      searched: true,
+      user: req.session.user 
+    });
+    
+  } catch (err) {
+    console.error('Error searching sleep logs:', err);
+    req.flash('error', 'Error searching sleep logs');
+    res.redirect('/sleeplogs');
+  }
+});
+
 module.exports = router;
